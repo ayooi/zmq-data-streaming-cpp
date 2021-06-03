@@ -39,6 +39,12 @@ public:
 
     ~DataServiceWriter() {
         _running = false;
+        {
+            std::string command = "deregister";
+            zmq_send(_serviceSocket, command.c_str(), command.length(), ZMQ_SNDMORE);
+            zmq_send(_serviceSocket, _serviceName.c_str(), _serviceName.length(), ZMQ_SNDMORE);
+            zmq_send(_serviceSocket, _dataUrl.c_str(), _dataUrl.length(), 0);
+        }
         zmq_close(_serviceSocket);
         zmq_close(_dataSocket);
         _thread.join();
