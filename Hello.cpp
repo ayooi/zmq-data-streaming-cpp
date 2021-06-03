@@ -4,8 +4,58 @@
 #include <iostream>
 #include <zmq.h>
 #include <thread>
+#include <list>
+#include <set>
 
 using namespace std::chrono_literals;
+
+class DataServiceReader {
+public:
+    DataServiceReader(const std::string &uniqueName,
+                      const std::string &serviceName,
+                      void *ctx,
+                      const std::string &serviceLocatorUrl)
+            : _serviceName(serviceName),
+              _running(true) {
+        _locatorSocket = zmq_socket(ctx, ZMQ_DEALER);
+        zmq_setsockopt(_locatorSocket, ZMQ_IDENTITY, &uniqueName, uniqueName.length());
+        long timeout = 5;
+        zmq_setsockopt(_locatorSocket, ZMQ_SNDTIMEO, &timeout, sizeof(timeout));
+        zmq_connect(_locatorSocket, serviceLocatorUrl.c_str());
+
+        _controlSocket = zmq_socket(ctx, ZMQ_PUSH);
+        auto internalControlUrl = "inproc://" + uniqueName;
+        zmq_bind(_controlSocket, internalControlUrl.c_str());
+
+        _dataSocket = zmq_socket(ctx, ZMQ_PULL);
+        zmq_connect(_dataSocket, internalControlUrl.c_str());
+
+        _thread = std::thread([&]() {
+            while (_running) {
+
+            }
+        });
+    }
+
+    ~DataServiceReader() {
+        zmq_close(_controlSocket);
+        zmq_close(_dataSocket);
+        zmq_close(_locatorSocket);
+    }
+
+private:
+    void *_locatorSocket;
+    void *_dataSocket;
+    void *_controlSocket;
+
+    const std::string _serviceName;
+    std::thread _thread;
+    bool _running;
+
+    std::list<uint8_t[]> _payloads;
+    std::set<std::string> _locations;
+
+};
 
 class DataServiceWriter {
 public:
