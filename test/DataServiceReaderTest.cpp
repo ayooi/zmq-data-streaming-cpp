@@ -50,7 +50,7 @@ namespace dataservicereadertest {
             zmq_msg_init(&msgs);
             zmq_msg_recv(&msgs, router, 0);
             auto command = std::string(static_cast<char *>(zmq_msg_data(&msgs)), zmq_msg_size(&msgs));
-            ASSERT_EQ("query", command);
+            ASSERT_EQ("force-query", command);
             zmq_msg_close(&msgs);
         }
         // expect the service name here

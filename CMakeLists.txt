@@ -22,7 +22,7 @@ target_include_directories(zmq_data_streaming PUBLIC
 
 target_link_libraries(zmq_data_streaming zmq)
 
-add_executable(testApp src/Hello.cpp)
+add_executable(testApp src/example/Hello.cpp)
 
 target_include_directories(testApp PUBLIC
         src/)
@@ -34,7 +34,8 @@ enable_testing()
 
 add_executable(zmq_framework_test
         test/DataServiceWriterTest.cpp
-        test/DataServiceReaderTest.cpp)
+        test/DataServiceReaderTest.cpp
+        test/WriterConnectionDetailTest.cpp)
 
 target_include_directories(zmq_framework_test PUBLIC
         src/

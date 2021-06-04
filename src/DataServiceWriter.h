@@ -11,11 +11,13 @@
 #include <zmq.h>
 #include <string>
 #include <thread>
+#include "WriterConnectionDetail.h"
+
 class DataServiceWriter {
 public:
 
     DataServiceWriter(std::string serviceName,
-                      const std::string &dataUrl,
+                      const WriteConnectionDetail &connectionDetail,
                       void *ctx,
                       const std::string &serviceLocatorUrl);
 
@@ -30,7 +32,8 @@ private:
 
     std::thread _thread;
     bool _running;
-    std::string _dataUrl;
+    std::string _dataBindUrl;
+    std::string _dataAnnouncementUrl;
     std::string _serviceName;
 };
 
