@@ -9,6 +9,7 @@
 #include <vector>
 #include "DataServiceWriter.h"
 #include "DataServiceReader.h"
+#include "WriterConnectionDetail.h"
 
 using namespace std::chrono_literals;
 
@@ -40,15 +41,12 @@ void simple_test() {
 }
 
 int main(int argc, char **argv) {
-//    simple_test();
-
     auto ctx = zmq_ctx_new();
     std::string serviceName = "service-name";
-    std::string dataUrl = "tcp://localhost:15000";
+    std::string dataUrl = "tcp://localhost:15001";
     std::string serviceLocatorUrl = "tcp://localhost:19999";
 
-    DataServiceWriter writer(serviceName, dataUrl, ctx, serviceLocatorUrl);
-
+    DataServiceWriter writer(serviceName, parse(dataUrl), ctx, serviceLocatorUrl);
     DataServiceReader reader("random-name",
                              serviceName,
                              ctx,
@@ -56,19 +54,16 @@ int main(int argc, char **argv) {
 
     std::string payload = "payload";
 
-    while (true) {
+    for (int i = 0; i < 5; i++) {
         auto s = reinterpret_cast<const uint8_t *>(payload.c_str());
         writer.write(s, payload.length());
-        std::cout << "sent a payload" << std::endl;
-        std::this_thread::sleep_for(1s);
-
-        std::list<std::vector<uint8_t>> r;
-        reader.takeAll(r);
-
-        for (const auto &item : r) {
-            std::cout << std::string(item.data(), item.data() + item.size()) << std::endl;
-        }
     }
+    std::this_thread::sleep_for(1s);
 
+    std::list<std::vector<uint8_t>> vec;
+    reader.takeAll(vec);
+    for (const auto &item : vec) {
+        std::cout << std::string(item.data(), item.data() + item.size()) << std::endl;
+    }
     return 0;
 }

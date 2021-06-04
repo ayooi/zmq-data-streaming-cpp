@@ -9,13 +9,14 @@
 namespace dataservicewritertest {
     TEST(DataServiceWriterTest, basicWrite) {
         auto ctx = zmq_ctx_new();
+        const char *dataUrl = "tcp://192.168.0.214:12947";
         DataServiceWriter writer("service-name",
-                                 "inproc://data-url",
+                                 parse(dataUrl),
                                  ctx,
                                  "inproc://service-locator");
 
         auto pull = zmq_socket(ctx, ZMQ_PULL);
-        zmq_connect(pull, "inproc://data-url");
+        zmq_connect(pull, dataUrl);
 
         std::string payload = "Hello";
         writer.write(reinterpret_cast<const uint8_t *>(payload.c_str()), payload.length());

@@ -34,8 +34,7 @@ DataServiceReader::DataServiceReader(const std::string &uniqueName,
             zmq_send(_locatorSocket, command.c_str(), command.length(), ZMQ_SNDMORE);
             zmq_send(_locatorSocket, _serviceName.c_str(), _serviceName.length(), 0);
 
-            std::cout << "sent " << command << std::endl;
-            int rc = zmq_poll(pollitems, 1, 5000);
+            int rc = zmq_poll(pollitems, 1, 3000);
             if (rc == -1) {
                 break;
             }
@@ -51,7 +50,6 @@ DataServiceReader::DataServiceReader(const std::string &uniqueName,
                 zmq_msg_close(&msgs);
             }
             if (gotSomething) {
-                std::cout << "Got a response" << std::endl;
                 command = "query";
                 doConnects(locations);
             }
