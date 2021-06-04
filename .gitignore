@@ -1,0 +1,7 @@
+**/*.exe
+**/*.bazel
+**/*.make
+**/*.cmake
+**/*.o
+**/*.internal
+cmake-build-debug/**/*

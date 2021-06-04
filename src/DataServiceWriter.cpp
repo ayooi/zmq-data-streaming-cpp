@@ -2,22 +2,18 @@
 // Created by arans on 3/06/2021.
 //
 
-#include <vector>
-#include <set>
-#include <list>
-#include <thread>
-#include <zmq.h>
-#include <iostream>
 #include "DataServiceWriter.h"
+#include <iostream>
+#include <chrono>
 
 using namespace std::chrono_literals;
 
-DataServiceWriter::DataServiceWriter(const std::string &serviceName,
+DataServiceWriter::DataServiceWriter(std::string serviceName,
                                      const std::string &dataUrl,
                                      void *ctx,
                                      const std::string &serviceLocatorUrl)
         : _running(true),
-          _serviceName(serviceName),
+          _serviceName(std::move(serviceName)),
           _dataUrl(dataUrl) {
     _dataSocket = zmq_socket(ctx, ZMQ_PUSH);
     long val = 1000;

@@ -7,7 +7,6 @@
 #include <list>
 #include <set>
 #include <vector>
-#include <cstring>
 #include "DataServiceWriter.h"
 #include "DataServiceReader.h"
 
@@ -32,6 +31,7 @@ void simple_test() {
         zmq_msg_init(&msg);
         zmq_msg_recv(&msg, pull, 0);
         std::cout << std::string(static_cast<char *>(zmq_msg_data(&msg)), zmq_msg_size(&msg)) << std::endl;
+        zmq_close(&msg);
     }
 
     zmq_close(push);
@@ -40,7 +40,7 @@ void simple_test() {
 }
 
 int main(int argc, char **argv) {
-    simple_test();
+//    simple_test();
 
     auto ctx = zmq_ctx_new();
     std::string serviceName = "service-name";
@@ -59,6 +59,7 @@ int main(int argc, char **argv) {
     while (true) {
         auto s = reinterpret_cast<const uint8_t *>(payload.c_str());
         writer.write(s, payload.length());
+        std::cout << "sent a payload" << std::endl;
         std::this_thread::sleep_for(1s);
 
         std::list<std::vector<uint8_t>> r;

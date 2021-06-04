@@ -5,7 +5,7 @@
 #ifndef ZMQ_DATA_STREAM_CPP_DATASERVICEREADER_H
 #define ZMQ_DATA_STREAM_CPP_DATASERVICEREADER_H
 
-#include <cstring>
+#include <string>
 #include <vector>
 #include <set>
 #include <list>
@@ -32,7 +32,7 @@ private:
     void *_dataSocket;
     void *_controlSocket;
 
-    const std::string _serviceName;
+    std::string _serviceName;
     std::thread _queryThread;
     std::thread _processingThread;
     bool _running;
