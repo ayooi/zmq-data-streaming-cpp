@@ -6,15 +6,13 @@
 #define ZMQ_DATA_STREAM_CPP_DATASERVICEREADER_H
 
 #include <string>
-#include <vector>
 #include <set>
-#include <list>
 #include <thread>
 #include <zmq.h>
 #include <iostream>
+#include "DataServiceReaderInterface.h"
 
-
-class DataServiceReader {
+class DataServiceReader : public DataServiceReaderInterface {
 public:
     DataServiceReader(const std::string &uniqueName,
                       std::string serviceName,
@@ -23,7 +21,7 @@ public:
 
     void doConnects(const std::set<std::string> &incoming);
 
-    void takeAll(std::list<std::vector<uint8_t>> &res);
+    void takeAll(std::list<std::vector<uint8_t>> &res) override;
 
     ~DataServiceReader();
 

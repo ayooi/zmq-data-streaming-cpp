@@ -15,6 +15,7 @@ FetchContent_MakeAvailable(googletest)
 add_library(zmq_data_streaming SHARED
         src/DataServiceWriter.cpp
         src/DataServiceReader.cpp
+        src/DataServiceFactory.cpp
         )
 
 target_include_directories(zmq_data_streaming PUBLIC

@@ -12,8 +12,9 @@
 #include <string>
 #include <thread>
 #include "WriterConnectionDetail.h"
+#include "DataServiceWriterInterface.h"
 
-class DataServiceWriter {
+class DataServiceWriter : public DataServiceWriterInterface {
 public:
 
     DataServiceWriter(std::string serviceName,
@@ -23,8 +24,7 @@ public:
 
     ~DataServiceWriter();
 
-    void write(const uint8_t *payload, size_t length);
-
+    void write(const uint8_t *payload, size_t length) override;
 
 private:
     void *_dataSocket;
